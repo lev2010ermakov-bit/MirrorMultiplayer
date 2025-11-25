@@ -94,7 +94,7 @@ Material:
     - _HorizonHeight: 0
     - _Metallic: 0
     - _Mode: 0
-    - _MoonSize: 0.265
+    - _MoonSize: 0.211
     - _OcclusionStrength: 1
     - _Overcast: 0
     - _Parallax: 0.02
@@ -102,10 +102,10 @@ Material:
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
-    - _StarDensity: 250
+    - _StarDensity: 164
     - _StarHeight: -1
-    - _StarIntensity: 0.224
-    - _StarSeed: 56
+    - _StarIntensity: 0.371
+    - _StarSeed: 356
     - _SunConvergence: 9.12
     - _SunFlareIntensity: 0.1
     - _SunFlareLength: 0
