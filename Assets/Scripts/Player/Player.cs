@@ -1,5 +1,14 @@
 using UnityEngine;
 using Mirror;
+using StarterAssets;
+
+[RequireComponent(typeof(PlayerRaycast))]
+[RequireComponent(typeof(NetworkIdentity))]
+[RequireComponent(typeof(CharacterController))]
+[RequireComponent(typeof(FirstPersonController))]
+[RequireComponent(typeof(BasicRigidBodyPush))]
+[RequireComponent(typeof(StarterAssetsInputs))]
+[RequireComponent(typeof(NetworkTransformUnreliable))]
 
 public class Player : NetworkBehaviour
 {
@@ -10,23 +19,29 @@ public class Player : NetworkBehaviour
     [SerializeField] private float _takeOffForce;
     public Waepon _currentWeapon; 
 
+    private PlayerRaycast _raycast;
+    private Transform _camera;
+
+    private void Start()
+    {
+        _raycast = GetComponent<PlayerRaycast>();
+        _camera = Camera.main.transform;
+    }
+
     private void Update()
     {
         if (!isLocalPlayer) return;
 
-        RaycastHit hit;
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            TakeOffWeapon();
+        }
 
-        Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, _itemsLayer);
-
-        if (hit.collider == null) return;
+        if (_raycast.CastedObj == null) return;
 
         if (Input.GetKeyDown(KeyCode.E))
         {
-            Grab(hit.transform.gameObject);
-        }
-        if (Input.GetKey(KeyCode.G))
-        {
-            TakeOffWeapon();
+            Grab(_raycast.CastedObj);
         }
     }
 
@@ -38,19 +53,19 @@ public class Player : NetworkBehaviour
         {
             case Waepon:
             GameObject NewWeapon = Instantiate(Item, _gunHandler).gameObject;
-           // _currentWeapon = NewWeapon.GetComponent<Waepon>();
-            NetworkServer.Spawn(NewWeapon, gameObject);
-                break;
-            case Shield:
+            _currentWeapon = NewWeapon.GetComponent<Waepon>();
+            NetworkServer.Spawn(NewWeapon);
                 break;
         }
-        NetworkServer.Spawn(Object);
+        NetworkServer.Destroy(Object);
     }
 
     private void TakeOffWeapon()
     {
-        Rigidbody TakedWeapon = Instantiate(_currentWeapon.PhysicsVersion, transform.position, transform.rotation, parent: null).gameObject.GetComponent<Rigidbody>();
-        TakedWeapon.AddForce(Camera.main.transform.forward * _takeOffForce, ForceMode.Impulse);
+        if (_currentWeapon == null) { Debug.LogWarning("NO WEAPON"); return; }
+
+        Rigidbody TakedWeapon = Instantiate(_currentWeapon.PhysicsVersion, _camera.position, _camera.rotation, parent: null).gameObject.GetComponent<Rigidbody>();
+        TakedWeapon.AddForce(_camera.forward * _takeOffForce, ForceMode.Impulse);
         NetworkServer.Spawn(TakedWeapon.gameObject);
         NetworkServer.Destroy(_currentWeapon.gameObject);
     }
