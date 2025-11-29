@@ -13,18 +13,11 @@ public class WeaponConfig : ScriptableObject
 public struct WeaponSetting
 {
     public WaeponType Type;
-    public bool SniperLike;
     public GameObject PhysicVersion;
     public GameObject HandedVersion;
 
     public int DamagePerBullet;
-    [Range(1f, 8f)]public float HeadMultipler;
-    
-    public float StandSpray;
-    public float CroshiredSpray;
-    public float MoveSpray;
-
-    public float OutForce;
 
     public float StrikeToStrikeTime;
+    public AudioClip ShootSound;
 }

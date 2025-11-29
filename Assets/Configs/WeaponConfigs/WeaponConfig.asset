@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 79ed78d48d3c459be889cb8be3bda591, type: 3}
+  m_Name: WeaponConfig
+  m_EditorClassIdentifier: 
+  WeaponSetts:
+  - Type: 0
+    PhysicVersion: {fileID: 4930947344742430787, guid: 4fc5ef987aa4c6010bbbcddb34ee4cb6, type: 3}
+    HandedVersion: {fileID: 967062252575236158, guid: e65d4ea38a251c962b789445f0f8697f, type: 3}
+    DamagePerBullet: 35
+    StrikeToStrikeTime: 0.1
+    ShootSound: {fileID: 8300000, guid: f3ead1b336a6fe2c28ff127aeafc1cc6, type: 3}

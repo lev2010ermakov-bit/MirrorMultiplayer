@@ -3,7 +3,6 @@ using Mirror;
 
 public class GrableItem : NetworkBehaviour
 {
-    public GameObject HandItemVersion;
-    public int ItemHealth;
+    public WaeponType Type;
     public int Bullets;
 }
