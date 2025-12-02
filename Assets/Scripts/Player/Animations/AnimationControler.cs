@@ -1,7 +1,6 @@
 using UnityEngine;
 using Mirror;
 using StarterAssets;
-using NUnit.Framework;
 
 public class AnimationControler : NetworkBehaviour
 {
@@ -30,7 +29,7 @@ public class AnimationControler : NetworkBehaviour
     {
         cmdSetAnimFrame();
     } 
-    [Command]
+    [Command(requiresAuthority = false)]
     private void cmdSetAnimFrame()
     {
         SetInput();

@@ -8716,7 +8716,7 @@ MonoBehaviour:
   onlineScene: Assets/Scenes/BatleArena.unity
   offlineSceneLoadDelay: 0
   transport: {fileID: 1881719902}
-  networkAddress: lemon-games.ru
+  networkAddress: www.lemon-games.ru
   maxConnections: 100
   disconnectInactiveConnections: 0
   disconnectInactiveTimeout: 60

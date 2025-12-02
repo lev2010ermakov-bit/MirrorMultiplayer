@@ -13,7 +13,6 @@ public class PlayerRaycast : NetworkBehaviour
     [SerializeField] private LayerMask _usebleObjectsMask;
     [SerializeField] private LayerMask _damagebleObjectsMask;
     [SerializeField] private AudioSource _aud;
-    private bool _canShoot = true;
 
 
 
@@ -26,10 +25,9 @@ public class PlayerRaycast : NetworkBehaviour
 
     private void Update()
     {
-        CastUsebleObjects();
+        rpcCastUsebleObjects();
     }
-    [ClientRpc]
-    private void CastUsebleObjects()
+    private void rpcCastUsebleObjects()
     {
         RaycastHit hit;
 

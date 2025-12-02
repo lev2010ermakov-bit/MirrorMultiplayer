@@ -16,7 +16,7 @@ MonoBehaviour:
   RunSpeed: 9
   LookSence: 2.03
   SpeedChangeRate: 10
-  JumpHeight: 0.98
-  Gravity: 15.8
+  JumpHeight: 1.06
+  Gravity: 7.3
   DropWeaponForce: 31
   TrowWeaponForce: 79

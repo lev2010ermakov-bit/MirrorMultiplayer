@@ -66,7 +66,7 @@ namespace StarterAssets
 		private const float _threshold = 0.01f;
 
 		public bool IsCurrentDeviceMouse;
-
+		[SyncVar] public bool LastGroundedValue;
 		private void Awake()
 		{
 			if (ConfigContainer.Movement == null) { Invoke(nameof(Start), 0.001f); return; }
@@ -108,8 +108,7 @@ namespace StarterAssets
 		private void GroundedCheck()
 		{
 			// set sphere position, with offset
-			Vector3 spherePosition = new Vector3(transform.position.x, transform.position.y - GroundedOffset, transform.position.z);
-			Grounded = Physics.CheckSphere(spherePosition, GroundedRadius, GroundLayers, QueryTriggerInteraction.Ignore);
+			Grounded = _controller.isGrounded;
 		}
 
 		private void CameraRotation()

@@ -23,6 +23,10 @@ public class KeyboardControlInput : MonoBehaviour
 
         WASDOutputEvent.Invoke(InputVector);
         JumpEvent.Invoke(Input.GetKey(KeyCode.Space));
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            Debug.Log("Jump");
+        }
         SptintEvent.Invoke(Input.GetKey(KeyCode.LeftShift));
     }
 }

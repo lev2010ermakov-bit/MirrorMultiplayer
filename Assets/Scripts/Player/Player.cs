@@ -62,7 +62,7 @@ public class Player : NetworkBehaviour
 
         if (Input.GetKeyDown(KeyCode.E))
         {
-            Grab(_raycast.CastedObj);
+            CmdGrab(_raycast.CastedObj);
         }
         if (Input.GetMouseButton(0))
         {
@@ -73,7 +73,7 @@ public class Player : NetworkBehaviour
         if (_currentWeapon) _currentWeapon.PlayAnim(Input.GetMouseButton(0));
     }
 
-    [ClientRpc]
+    [Command(requiresAuthority = false)]
     public void Damage(int damage)
     {
         Health -= damage;
@@ -96,6 +96,11 @@ public class Player : NetworkBehaviour
         foreach (var m in _playerSkinDetails) m.SetActive(true);
         transform.position = Spawn.position;
         _anim.Spawn();
+    }
+    [Command]
+    private void CmdGrab(GameObject g)
+    {
+        Grab(g);
     }
     [ClientRpc]
     private void Grab(GameObject Object)
