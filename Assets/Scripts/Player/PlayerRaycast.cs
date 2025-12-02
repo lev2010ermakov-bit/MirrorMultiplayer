@@ -1,6 +1,9 @@
+using Mirror;
 using UnityEngine;
+using Unity.Cinemachine;
+using System.Collections;
 
-public class PlayerRaycast : MonoBehaviour
+public class PlayerRaycast : NetworkBehaviour
 {
     public GameObject CastedObj;
 
@@ -8,7 +11,9 @@ public class PlayerRaycast : MonoBehaviour
 
     [SerializeField] private float _maxCastDistance;
     [SerializeField] private LayerMask _usebleObjectsMask;
-    private AudioSource _aud;
+    [SerializeField] private LayerMask _damagebleObjectsMask;
+    [SerializeField] private AudioSource _aud;
+    private bool _canShoot = true;
 
 
 
@@ -17,14 +22,13 @@ public class PlayerRaycast : MonoBehaviour
     private void Start()
     {
         _camera = Camera.main.transform;
-        _aud = GetComponent<AudioSource>();
     }
 
     private void Update()
     {
         CastUsebleObjects();
     }
-
+    [ClientRpc]
     private void CastUsebleObjects()
     {
         RaycastHit hit;
@@ -36,19 +40,22 @@ public class PlayerRaycast : MonoBehaviour
         CastedObj = hit.transform.gameObject;
     }
     
-    public void CastBullet(WaeponType type)
+    [ClientRpc]
+    public void RpcCastBullet(Waepon Weapon)
     {
-        RaycastHit hit;
-        Physics.Raycast(_camera.position, _camera.forward, out hit, 200, layerMask: 6);
-        if (hit.transform == null) return;
-        int damage = 0;
-        AudioClip Sound = null;
-        foreach (var w in ConfigContainer.Weapon.WeaponSetts)
+        if (Weapon.CanShoot)
         {
-            if (w.Type == type) { damage = w.DamagePerBullet; Sound = w.ShootSound; }
+            RaycastHit hit;
+            Physics.Raycast(_camera.position, _camera.forward, out hit, 200, _damagebleObjectsMask);
+            int damage = 0;
+            foreach (var w in ConfigContainer.Weapon.WeaponSetts)
+            {
+                if (w.Type == Weapon.Type) { damage = w.DamagePerBullet;}
+            }
+
+            if (hit.transform == null) return;
+
+            hit.transform.GetComponent<Player>().Damage(damage);
         }
-        hit.transform.GetComponent<Player>().Damage(damage);
-        _aud.PlayOneShot(Sound);
-        Debug.Log(Sound.name + damage.ToString());
     }
 }

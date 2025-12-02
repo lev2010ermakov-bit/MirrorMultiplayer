@@ -1,17 +1,15 @@
 using UnityEngine;
-#if ENABLE_INPUT_SYSTEM
-using UnityEngine.InputSystem;
-#endif
+using Mirror;
 
 namespace StarterAssets
 {
-	public class StarterAssetsInputs : MonoBehaviour
+	public class StarterAssetsInputs : NetworkBehaviour
 	{
 		[Header("Character Input Values")]
-		public Vector2 move;
-		public Vector2 look;
-		public bool jump;
-		public bool sprint;
+		[SyncVar] public Vector2 move;
+		[SyncVar] public Vector2 look;
+		[SyncVar] public bool jump;
+		[SyncVar] public bool sprint;
 
 		[Header("Movement Settings")]
 		public bool analogMovement;

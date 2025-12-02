@@ -1,9 +1,10 @@
-﻿using UnityEngine;
+﻿using Mirror;
+using UnityEngine;
 
 namespace StarterAssets
 {
 	[RequireComponent(typeof(CharacterController))]
-	public class FirstPersonController : MonoBehaviour
+	public class FirstPersonController : NetworkBehaviour
 	{
 		[Header("Player")]
 		[Tooltip("Move speed of the character in m/s")]
@@ -17,15 +18,25 @@ namespace StarterAssets
 
 		[Space(10)]
 		[Tooltip("The height the player can jump")]
-		private float JumpHeight = 1.2f;
+		public float JumpHeight = 1.2f;
 		[Tooltip("The character uses its own gravity value. The engine default is -9.81f")]
-		private float Gravity = -15.0f;
+		public float Gravity = -15.0f;
 
 		[Space(10)]
 		[Tooltip("Time required to pass before being able to jump again. Set to 0f to instantly jump again")]
 		public float JumpTimeout = 0.1f;
 		[Tooltip("Time required to pass before entering the fall state. Useful for walking down stairs")]
 		public float FallTimeout = 0.15f;
+
+		[Header("Player Grounded")]
+		[Tooltip("If the character is grounded or not. Not part of the CharacterController built in grounded check")]
+		public bool Grounded = true;
+		[Tooltip("Useful for rough ground")]
+		public float GroundedOffset = -0.14f;
+		[Tooltip("The radius of the grounded check. Should match the radius of the CharacterController")]
+		public float GroundedRadius = 0.5f;
+		[Tooltip("What layers the character uses as ground")]
+		public LayerMask GroundLayers;
 
 		[Header("Cinemachine")]
 		[Tooltip("The follow target set in the Cinemachine Virtual Camera that the camera will follow")]
@@ -54,7 +65,7 @@ namespace StarterAssets
 
 		private const float _threshold = 0.01f;
 
-		bool IsCurrentDeviceMouse = true;
+		public bool IsCurrentDeviceMouse;
 
 		private void Awake()
 		{
@@ -85,6 +96,7 @@ namespace StarterAssets
 		private void Update()
 		{
 			JumpAndGravity();
+			GroundedCheck();
 			Move();
 		}
 
@@ -93,11 +105,18 @@ namespace StarterAssets
 			CameraRotation();
 		}
 
+		private void GroundedCheck()
+		{
+			// set sphere position, with offset
+			Vector3 spherePosition = new Vector3(transform.position.x, transform.position.y - GroundedOffset, transform.position.z);
+			Grounded = Physics.CheckSphere(spherePosition, GroundedRadius, GroundLayers, QueryTriggerInteraction.Ignore);
+		}
+
 		private void CameraRotation()
 		{
 			// if there is an input
-			if (_input.look.sqrMagnitude >= _threshold)
-			{
+			//if (_input.look.sqrMagnitude >= _threshold)
+			//{
 				//Don't multiply mouse input by Time.deltaTime
 				float deltaTimeMultiplier = IsCurrentDeviceMouse ? 1.0f : Time.deltaTime;
 				
@@ -112,7 +131,7 @@ namespace StarterAssets
 
 				// rotate the player left and right
 				transform.Rotate(Vector3.up * _rotationVelocity);
-			}
+			//}
 		}
 
 		private void Move()
@@ -164,7 +183,7 @@ namespace StarterAssets
 
 		private void JumpAndGravity()
 		{
-			if (_controller.isGrounded)
+			if (Grounded)
 			{
 				// reset the fall timeout timer
 				_fallTimeoutDelta = FallTimeout;
@@ -215,6 +234,18 @@ namespace StarterAssets
 			if (lfAngle < -360f) lfAngle += 360f;
 			if (lfAngle > 360f) lfAngle -= 360f;
 			return Mathf.Clamp(lfAngle, lfMin, lfMax);
+		}
+
+		private void OnDrawGizmosSelected()
+		{
+			Color transparentGreen = new Color(0.0f, 1.0f, 0.0f, 0.35f);
+			Color transparentRed = new Color(1.0f, 0.0f, 0.0f, 0.35f);
+
+			if (Grounded) Gizmos.color = transparentGreen;
+			else Gizmos.color = transparentRed;
+
+			// when selected, draw a gizmo in the position of, and matching radius of, the grounded collider
+			Gizmos.DrawSphere(new Vector3(transform.position.x, transform.position.y - GroundedOffset, transform.position.z), GroundedRadius);
 		}
 	}
 }

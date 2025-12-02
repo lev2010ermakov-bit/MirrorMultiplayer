@@ -17,7 +17,5 @@ public struct WeaponSetting
     public GameObject HandedVersion;
 
     public int DamagePerBullet;
-
-    public float StrikeToStrikeTime;
     public AudioClip ShootSound;
 }
