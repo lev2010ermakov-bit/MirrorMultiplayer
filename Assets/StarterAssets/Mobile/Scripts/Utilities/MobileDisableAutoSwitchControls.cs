@@ -27,15 +27,7 @@ public class MobileDisableAutoSwitchControls : MonoBehaviour
 
     void DisableAutoSwitchControls()
     {
-        GameObject[] childs = new GameObject[transform.childCount];
-        for (int i = 0;i < transform.childCount; i++)
-        {
-            childs[i] = transform.GetChild(i).gameObject;
-        }
-        foreach (var o in childs)
-        {
-            o.SetActive(false);
-        }
+        playerInput.neverAutoSwitchControlSchemes = true;
     }
 
 #endif

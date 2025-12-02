@@ -17,5 +17,5 @@ MonoBehaviour:
     PhysicVersion: {fileID: 4930947344742430787, guid: 4fc5ef987aa4c6010bbbcddb34ee4cb6, type: 3}
     HandedVersion: {fileID: 967062252575236158, guid: e65d4ea38a251c962b789445f0f8697f, type: 3}
     DamagePerBullet: 35
-    StrikeToStrikeTime: 0.1
+    BulletToBulletTime: 0.4
     ShootSound: {fileID: 8300000, guid: f3ead1b336a6fe2c28ff127aeafc1cc6, type: 3}

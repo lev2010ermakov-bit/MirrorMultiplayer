@@ -11,8 +11,8 @@ public class UIManager : MonoBehaviour
         Instance = this;
     }
 
-    public void PrintRed(string Text)
+    public void DiePanel()
     {
-        RedText.text = Text;
+        
     }
 }

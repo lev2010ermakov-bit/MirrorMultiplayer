@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 75c8005d906a9b0a4ba2a704fb008185
+guid: d9c0dd5cdac07b145be73329e489869a
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -135,6 +135,6 @@ AssetOrigin:
   productId: 196525
   packageName: Starter Assets - FirstPerson | Updates in new CharacterController
     package
-  packageVersion: 
+  packageVersion: 1.3
   assetPath: Assets/StarterAssets/Environment/Art/Textures/Grid_02_BaseMap.png
-  uploadId: 0
+  uploadId: 691166

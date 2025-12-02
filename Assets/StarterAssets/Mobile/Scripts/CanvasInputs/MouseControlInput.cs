@@ -19,7 +19,7 @@ public class MouseControlInput : MonoBehaviour
     private void Update()
     {
         Vector2 MouseInputVector = new Vector2(Input.mousePositionDelta.x,-Input.mousePositionDelta.y);
-        MouseOutputEvent.Invoke(MouseInputVector / Multipler);
+        MouseOutputEvent.Invoke(MouseInputVector * Multipler);
         
         if (Input.GetKeyDown(KeyCode.Tab))
         {
