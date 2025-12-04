@@ -13,9 +13,10 @@ public class WeaponConfig : ScriptableObject
 public struct WeaponSetting
 {
     public WaeponType Type;
-    public GameObject PhysicVersion;
-    public GameObject HandedVersion;
+    public GameObject FPCPrefab;
+    public GameObject SkinPrefab;
 
     public int DamagePerBullet;
     public AudioClip ShootSound;
+    public AudioClip AimSound;
 }

@@ -27,15 +27,27 @@ public class AnimationControler : NetworkBehaviour
 
     private void Update()
     {
-        cmdSetAnimFrame();
+        SetAnimFrame();
     } 
-    [Command(requiresAuthority = false)]
-    private void cmdSetAnimFrame()
+    private void SetAnimFrame()
     {
         SetInput();
         SetWalkAnimations();
         Jump();
     }
+
+    [Command(requiresAuthority = false)] public void cmdPlayStepSound() => rpcPlayStepSound();
+    [Command(requiresAuthority = false)] public void cmdGroundHit() => rpcGroundHit();
+    [Command(requiresAuthority = false)] public void cmdSpawn() => rpcSpawn();
+    [Command(requiresAuthority = false)] public void cmdDieAnim() => rpcDieAnim();
+
+
+    [ClientRpc] private void rpcPlayStepSound() { if (_character.isGrounded) _aud.PlayOneShot(_stepSounds[Random.Range(0, _stepSounds.Length)]); }
+    [ClientRpc] private void rpcGroundHit() => _SkinAnimator.animator.SetTrigger("GroundHit");
+    [ClientRpc] private void rpcDieAnim() => _SkinAnimator.animator.SetTrigger("Die");
+    [ClientRpc] private void rpcSpawn() => _SkinAnimator.animator.SetTrigger("Spawn");
+
+
     private void SetInput()
     {
         isWalk = _inputs.move.magnitude > 0.1f;
@@ -54,21 +66,5 @@ public class AnimationControler : NetworkBehaviour
             _FPCAnimator.animator.SetFloat("WalkSpeed", WalkSpeed);
         }
     }
-    [ClientRpc]
-    public void rpcPlayStepSound()
-    {
-        if (_character.isGrounded)
-            _aud.PlayOneShot(_stepSounds[Random.Range(0, _stepSounds.Length)]);
-    }
-    private void Jump()
-    {
-        if (_inputs.jump) _SkinAnimator.animator.SetTrigger("Jump");
-    }
-    [ClientRpc]
-    public void GroundHit()
-    {
-        _SkinAnimator.animator.SetTrigger("GroundHit");
-    }
-    [ClientRpc] public void DieAnim() => _SkinAnimator.animator.SetTrigger("Die");
-    [ClientRpc] public void Spawn() => _SkinAnimator.animator.SetTrigger("Spawn");
+    private void Jump() { if (_inputs.jump) _SkinAnimator.animator.SetTrigger("Jump"); }
 }
