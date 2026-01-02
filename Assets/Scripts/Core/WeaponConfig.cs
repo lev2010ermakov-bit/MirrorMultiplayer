@@ -12,7 +12,7 @@ public class WeaponConfig : ScriptableObject
 [Serializable]
 public struct WeaponSetting
 {
-    public WaeponType Type;
+    public WeaponType Type;
     public GameObject FPCPrefab;
     public GameObject SkinPrefab;
 

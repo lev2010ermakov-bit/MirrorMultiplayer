@@ -1,128 +1,56 @@
-using System.Collections.Generic;
-using System.Collections;
 using Mirror;
 using UnityEngine;
-using Unity.VisualScripting;
 
 public class PlayerInventory : NetworkBehaviour
 {
     [SerializeField] private Transform _fpcGunHandler;
     [SerializeField] private Transform _skinGunHandler;
-    [SyncVar] public List<Waepon> _weapons = new List<Waepon>();
-    [SyncVar] public List<Waepon> _buyedWeaponsFPC = new List<Waepon>();
-    [SyncVar] private List<bool> _weaponsActive = new List<bool>();
-
-    private List<SkinWeapon> _skinWeapons = new List<SkinWeapon>();
-    private List<SkinWeapon> _buyedWeaponsSkin = new List<SkinWeapon>();
-    [SyncVar] public int _currentWeaponIndex = 0;
-    private bool Sniped;
+    
+    [SyncVar(hook = nameof(cmdSetWeaponVisual))] public WeaponType currentWeapon;
+    private GameObject[] _currentWeapons = new GameObject[2];
 
     private void Start()
     {
-        if (!isLocalPlayer) return;
-        _currentWeaponIndex = 0;
-        if (!ConfigContainer.Weapon){Invoke(nameof(Start), 0.01f); return;}
-        cmdSpawnWeapons();
-        BuyWeapon(WaeponType.KNIFE);
+        cmdSetWeaponVisual(WeaponType.EMPTY, currentWeapon);
     }
+
 
     [Command(requiresAuthority = false)]
-    private void cmdSpawnWeapons()
+    public void ChoiseWeapon(WeaponType weapon)
     {
-        rpcSpawnWeapons();
-    }
-    [ClientRpc]
-    private void rpcSpawnWeapons()
-    {
-        if (!isServer)
-        for (int i = 0; i < ConfigContainer.Weapon.WeaponSetts.Count; i++)
-        {
-            GameObject NewFPCWeapon = Instantiate(ConfigContainer.Weapon.WeaponSetts[i].FPCPrefab, _fpcGunHandler);
-            Spawn(NewFPCWeapon);
-            _weapons.Add(NewFPCWeapon.GetComponent<Waepon>());
-
-
-            GameObject NewSkinWeapon = Instantiate(ConfigContainer.Weapon.WeaponSetts[i].SkinPrefab, _skinGunHandler);
-            Spawn(NewSkinWeapon);
-            _skinWeapons.Add(NewSkinWeapon.GetComponent<SkinWeapon>());
-
-            _weaponsActive.Add(false);
-        }
-    }
-    [Command(requiresAuthority = false)]
-    private void Spawn(GameObject g)
-    {
-        NetworkServer.Spawn(g);
-    }
-    public void BuyWeapon(WaeponType type)
-    {
-        foreach (var w in _buyedWeaponsFPC) 
-        {
-            if (w.Type == type) 
-            { 
-                Debug.Log("Weapon already buyed"); 
-                return; 
-            }
-        }
-
-        bool WeaponFinded = false;
-
-        foreach (var w in _weapons) 
-        {
-            if (w.Type == type) 
-            {
-                _buyedWeaponsFPC.Add(w);
-                WeaponFinded = true;
-            }
-        }
-
-        if (!WeaponFinded) StartCoroutine(ReBuyWeapon(type));
-
-        foreach (var w in _skinWeapons) if (w.Type == type) _buyedWeaponsSkin.Add(w);
-
-        SelectWeapon(0);
+        currentWeapon = weapon;
     }
 
-    private IEnumerator ReBuyWeapon(WaeponType type)
+    [Command(requiresAuthority = false)] 
+    private void cmdSetWeaponVisual(WeaponType o, WeaponType n) => rpcSetWeaponVisual(o, n);
+
+    [ClientRpc] 
+    private void rpcSetWeaponVisual(WeaponType oldValue, WeaponType newValue)
     {
-        yield return new WaitForSeconds(0.01f);
-        BuyWeapon(type);
-    }
+        if (_currentWeapons[0]) Destroy(_currentWeapons[0]);
+        if (_currentWeapons[1]) Destroy(_currentWeapons[1]);
 
-    [Command(requiresAuthority = false)]
-    public void SelectWeapon(int DeltaIndex)
-    {
-        if (DeltaIndex != 0)
+        if (newValue == WeaponType.EMPTY) return;   
+
+        GameObject newFPCWeapon = null;
+        GameObject newSkinWeapon = null;
+        foreach (var w in ConfigContainer.Weapon.WeaponSetts) 
+            if (w.Type == newValue)
+                {
+                    newFPCWeapon = Instantiate(w.FPCPrefab, _fpcGunHandler);
+                    newSkinWeapon = Instantiate(w.SkinPrefab, _skinGunHandler);
+                }
+        
+        _currentWeapons[0] = newFPCWeapon;
+        _currentWeapons[1] = newSkinWeapon;
+
+        if (isLocalPlayer)
         {
-            _currentWeaponIndex += DeltaIndex;
-
-            if (_currentWeaponIndex > _buyedWeaponsFPC.Count - 1) _currentWeaponIndex -= _buyedWeaponsFPC.Count - 1;
-
-            if (_currentWeaponIndex < 0) _currentWeaponIndex = _buyedWeaponsFPC.Count + _currentWeaponIndex;
+            newSkinWeapon.SetActive(false);
         }
-
-        for (int i = 0; i < _buyedWeaponsFPC.Count; i++)
+        else
         {
-            _weaponsActive[i] = i == _currentWeaponIndex;
-        }
-    }
-
-    private void Update()
-    {
-        for(int i = 0; i < _weapons.Count - 1; i++)
-        {
-            _weapons[i].gameObject.SetActive(_weaponsActive[i]);
-            _skinWeapons[i].gameObject.SetActive(_weaponsActive[i]);
-        }
-        if (!isLocalPlayer) return;
-        if (_buyedWeaponsFPC.Count == 0) return;
-
-        if (Input.GetMouseButton(0)) _buyedWeaponsFPC[_currentWeaponIndex].Shoot();
-
-        if (Input.GetMouseButtonDown(1)) 
-        {
-            _buyedWeaponsFPC[_currentWeaponIndex].SniperAim(Sniped);
-            Sniped = !Sniped;
+            newFPCWeapon.SetActive(false);
         }
     }
 }

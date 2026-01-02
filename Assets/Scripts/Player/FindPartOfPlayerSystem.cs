@@ -6,6 +6,7 @@ using UnityEngine;
 public class FindPartOfPlayerSystem : MonoBehaviour
 {
     [SerializeField] private UICanvasControllerInput _canvasInput;
+    [SerializeField] private UIManager _manager;
     [SerializeField] private CinemachineCamera _camera;
     [SerializeField] private int _maxFindTrys;
     private int _trys;
@@ -19,6 +20,7 @@ public class FindPartOfPlayerSystem : MonoBehaviour
             {
                 _canvasInput.starterAssetsInputs = player.GetComponent<StarterAssetsInputs>();
                 _camera.Target.TrackingTarget = player.GetComponent<FirstPersonController>().CinemachineCameraTarget.transform;
+                _manager.player = player.GetComponent<Player>();
             }
         }
         

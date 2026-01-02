@@ -6,7 +6,7 @@ public class Knife : Waepon
     protected override void Start()
     {
         CanShoot = true;
-        Type = WaeponType.KNIFE;
+        Type = WeaponType.KNIFE;
         base.Start();
     }
     [ClientRpc] protected override void rpcPlayAnim(string o)

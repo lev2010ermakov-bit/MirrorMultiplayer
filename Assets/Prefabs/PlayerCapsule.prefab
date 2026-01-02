@@ -2623,14 +2623,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55c7a0096c8f364a89e29e3f1b784e14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  syncDirection: 1
+  syncDirection: 0
   syncMode: 0
   syncInterval: 0
   _fpcGunHandler: {fileID: 3576575227681479250}
   _skinGunHandler: {fileID: 610561765212254419}
-  _weapons: []
-  _buyedWeaponsFPC: []
-  _currentWeaponIndex: 0
+  currentWeapon: 0
 --- !u!1 &8643902719362297898
 GameObject:
   m_ObjectHideFlags: 0

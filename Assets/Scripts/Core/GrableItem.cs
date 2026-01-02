@@ -3,6 +3,6 @@ using Mirror;
 
 public class GrableItem : NetworkBehaviour
 {
-    public WaeponType Type;
+    public WeaponType Type;
     public int Bullets;
 }

@@ -5,7 +5,7 @@ using UnityEngine;
 public abstract class Waepon : NetworkBehaviour
 {
     [SerializeField] protected LayerMask PlayerLayerMask;
-    [HideInInspector] public WaeponType Type;
+    [HideInInspector] public WeaponType Type;
     protected bool CanShoot = true;
     protected NetworkAnimator _anim;
     private AudioClip _shootSound;
@@ -45,8 +45,9 @@ public abstract class Waepon : NetworkBehaviour
     public void MakeAbleToShoot() => CanShoot = true;
 }
 [Serializable]
-public enum WaeponType
+public enum WeaponType
 {
+    EMPTY,
     AK, 
     M4A1, 
     USP, 
