@@ -11,8 +11,7 @@ GameObject:
   - component: {fileID: 4430752215195194131}
   - component: {fileID: 7445362094228210522}
   - component: {fileID: 4863891562001989587}
-  - component: {fileID: -7907807617541164402}
-  - component: {fileID: 8857280095580831245}
+  - component: {fileID: 4683936536793012772}
   m_Layer: 0
   m_Name: Knife
   m_TagString: Untagged
@@ -88,33 +87,25 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &-7907807617541164402
-MonoBehaviour:
+--- !u!95 &4683936536793012772
+Animator:
+  serializedVersion: 7
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4807114966526148599}
   m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b166669a61850c6dd975e190f36f21be, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Type: 5
---- !u!114 &8857280095580831245
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4807114966526148599}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sceneId: 0
-  _assetId: 1862132405
-  serverOnly: 0
-  visibility: 0
-  hasSpawned: 0
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: db14aa6cdb0a8e20588e868f337c2b9e, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0

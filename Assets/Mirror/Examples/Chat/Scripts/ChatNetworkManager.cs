@@ -18,7 +18,7 @@ namespace Mirror.Examples.Chat
                 ChatAuthenticator.playerNames.Remove((string)conn.authenticationData);
 
             // remove connection from Dictionary of conn > names
-            ChatUI.connNames.Remove(conn);
+            //ChatUI.connNames.Remove(conn);
 
             base.OnServerDisconnect(conn);
         }

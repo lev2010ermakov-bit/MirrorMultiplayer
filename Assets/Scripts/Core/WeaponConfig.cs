@@ -1,11 +1,14 @@
 using System;
 using System.Collections.Generic;
-using Unity.Cinemachine;
 using UnityEngine;
+using PlayerScripts;
 
 [CreateAssetMenu(fileName = "WeaponConfig", menuName = "Game-Configs/WeaponConfig", order = 0)]
 public class WeaponConfig : ScriptableObject
 {
+    public float GunRayDistance;
+    public float KnifeRayDistance;
+    public float KnifeRayThick;
     public List<WeaponSetting> WeaponSetts; 
 }
 

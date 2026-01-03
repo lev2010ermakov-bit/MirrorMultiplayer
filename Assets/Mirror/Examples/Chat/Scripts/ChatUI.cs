@@ -1,51 +1,56 @@
 using System.Collections;
-using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using System.IO;
+using kcp2k;
 
 namespace Mirror.Examples.Chat
 {
     public class ChatUI : NetworkBehaviour
     {
         [Header("UI Elements")]
-        [SerializeField] Text chatHistory;
+        [SerializeField] TextMeshProUGUI chatText;
         [SerializeField] Scrollbar scrollbar;
-        [SerializeField] InputField chatMessage;
+        [SerializeField] TMP_InputField chatMessage;
         [SerializeField] Button sendButton;
 
         // This is only set on client to the name of the local player
-        internal static string localPlayerName;
+        public static string localPlayerName;
 
         // Server-only cross-reference of connections to player names
-        internal static readonly Dictionary<NetworkConnectionToClient, string> connNames = new Dictionary<NetworkConnectionToClient, string>();
 
         public override void OnStartServer()
         {
-            connNames.Clear();
+            
+        }
+
+        private void Start()
+        {
+            ToggleButton(chatMessage.text);
         }
 
         public override void OnStartClient()
         {
-            chatHistory.text = "";
+            chatText.text = "";
         }
 
         [Command(requiresAuthority = false)]
-        void CmdSend(string message, NetworkConnectionToClient sender = null)
+        void CmdSend(string message, string senderName)
         {
-            if (!connNames.ContainsKey(sender))
-                connNames.Add(sender, sender.identity.GetComponent<Player>().playerName);
-
             if (!string.IsNullOrWhiteSpace(message))
-                RpcReceive(connNames[sender], message.Trim());
+                RpcReceive(senderName, message.Trim());
         }
 
         [ClientRpc]
-        void RpcReceive(string playerName, string message)
+        void RpcReceive(string senderName, string message)
         {
-            string prettyMessage = playerName == localPlayerName ?
-                $"<color=red>{playerName}:</color> {message}" :
-                $"<color=blue>{playerName}:</color> {message}";
+            string prettyMessage = senderName == localPlayerName ?
+                $"<color=#CF27F5>{"You"}:</color> {message}" :
+                $"<color=#27F56C>{senderName}:</color> {message}";
+            string LogMessage = senderName + ": " + message;
             AppendMessage(prettyMessage);
+            AppendMessageToLog(LogMessage);
         }
 
         void AppendMessage(string message)
@@ -53,9 +58,25 @@ namespace Mirror.Examples.Chat
             StartCoroutine(AppendAndScroll(message));
         }
 
+        [Server]
+        private void AppendMessageToLog(string Log)
+        {
+            try
+            {
+                // Append the content to the file. Use Environment.NewLine for a new line.
+                File.AppendAllText("/home/lev/Documents/MultiplayerStatistic/Chat.txt", Log + "\n");
+                Debug.Log("Message added to chat history file");
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogError("Error writing to file: " + e.Message);
+            }
+        }
+
         IEnumerator AppendAndScroll(string message)
         {
-            chatHistory.text += message + "\n";
+            chatText.text += message + "\n";
+
 
             // it takes 2 frames for the UI to update ?!?!
             yield return null;
@@ -76,7 +97,7 @@ namespace Mirror.Examples.Chat
         // Called by UI element MessageField.OnValueChanged
         public void ToggleButton(string input)
         {
-            sendButton.interactable = !string.IsNullOrWhiteSpace(input);
+            sendButton.interactable = !string.IsNullOrWhiteSpace(chatMessage.text);
         }
 
         // Called by UI element MessageField.OnEndEdit
@@ -91,7 +112,7 @@ namespace Mirror.Examples.Chat
         {
             if (!string.IsNullOrWhiteSpace(chatMessage.text))
             {
-                CmdSend(chatMessage.text.Trim());
+                CmdSend(chatMessage.text.Trim(), localPlayerName);
                 chatMessage.text = string.Empty;
                 chatMessage.ActivateInputField();
             }

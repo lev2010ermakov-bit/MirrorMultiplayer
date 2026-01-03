@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
+using StarterAssets;
 
-namespace StarterAssets
+namespace PlayerScripts
 {
 	[RequireComponent(typeof(CharacterController))]
 	public class FirstPersonController : MonoBehaviour
@@ -60,7 +61,7 @@ namespace StarterAssets
 
 		private CharacterController _controller;
 		private StarterAssetsInputs _input;
-		private AnimationControler _anim;
+		private Player _player;
 		private GameObject _mainCamera;
 
 		private const float _threshold = 0.01f;
@@ -76,7 +77,7 @@ namespace StarterAssets
 			RotationSpeed = ConfigContainer.Movement.LookSence;
 			JumpHeight = ConfigContainer.Movement.JumpHeight;
 			Gravity = -ConfigContainer.Movement.Gravity;
-			_anim = GetComponent<AnimationControler>();
+			_player = GetComponent<Player>();
 			// get a reference to our main camera
 			if (_mainCamera == null)
 			{
@@ -185,7 +186,7 @@ namespace StarterAssets
 		{
 			if (Grounded)
 			{
-				if (!LastGroundedValue) _anim.cmdGroundHit();
+				if (!LastGroundedValue) _player.anim.cmdGroundHit();
 				// reset the fall timeout timer
 				_fallTimeoutDelta = FallTimeout;
 

@@ -1,15 +1,21 @@
 using UnityEngine;
 
-public class PlayerData : MonoBehaviour
+namespace PlayerScripts
 {
-    public string PlayerName;
-    public static PlayerData Instance;
-
-    private void Start()
+    public class PlayerData : MonoBehaviour
     {
-        if (Instance != null) Destroy(gameObject); else Instance = this; 
-        DontDestroyOnLoad(gameObject);
-    }
+        public static string PlayerName;
+        public static PlayerData Instance;
 
-    public void CallPlayerName(string name) => PlayerName = name;
+        private void Start()
+        {
+            if (Instance != null) 
+                Destroy(gameObject);
+            else
+            {  
+                Instance = this; 
+                DontDestroyOnLoad(gameObject);
+            } 
+        }
+    }
 }

@@ -2,6 +2,7 @@ using Mirror;
 using StarterAssets;
 using Unity.Cinemachine;
 using UnityEngine;
+using PlayerScripts;
 
 public class FindPartOfPlayerSystem : MonoBehaviour
 {
