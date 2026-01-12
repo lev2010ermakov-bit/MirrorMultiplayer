@@ -30,6 +30,7 @@ namespace PlayerScripts
         public PlayerInventory inventory;
         public PlayerWeaponTool weaponTool;
         private Transform _camera;
+        [SyncVar(hook = nameof(OnNameChanged))] public string PlayerName;
 
         private void Start()
         {
@@ -41,9 +42,10 @@ namespace PlayerScripts
             _camera = Camera.main.transform;
             if (isLocalPlayer)
             {
-                NameText.text = PlayerData.PlayerName;
                 ChatUI.localPlayerName = PlayerData.PlayerName;
+                PlayerName = PlayerData.PlayerName;
             }
+            NameText.text = PlayerName;
 
             NameText.gameObject.SetActive(!isLocalPlayer);
             HealthText.gameObject.SetActive(!isLocalPlayer);
@@ -56,13 +58,16 @@ namespace PlayerScripts
                 Canvas.LookAt(_camera);
                 Canvas.eulerAngles = Canvas.eulerAngles + new Vector3(0, 180, 0);
             }
-            if (Input.GetMouseButtonDown(0))
-            {
-                weaponTool.Shoot(inventory.currentWeapon);
-                Debug.Log("Shoot");
-            }
+            if (isLocalPlayer)
+                if (Input.GetMouseButtonDown(0))
+                {
+                    weaponTool.Shoot(inventory.currentWeapon);
+                    Debug.Log("Shoot");
+                }
         }
-        [Command(requiresAuthority = false)] public void cmdDamage(int damage)
+
+        [Command(requiresAuthority = false)] 
+        public void cmdDamage(int damage)
         {
             Health -= damage;
             if (Health <= 0)
@@ -71,34 +76,17 @@ namespace PlayerScripts
             }
         }
 
-        private void SetHealthText(int oldValue, int newValue)
-        {
-            HealthText.text = newValue.ToString();
-        }
+        private void SetHealthText(int oldValue, int newValue) => HealthText.text = newValue.ToString();
+        private void OnNameChanged(string o, string n) => NameText.text = PlayerName;
 
         private void Die()
         {
-            NetworkStartPosition[] Spawns = FindObjectsByType<NetworkStartPosition>(FindObjectsSortMode.None); // Search Spawn Points
-
-            StartCoroutine(Respawn(Spawns[Random.Range(0, Spawns.Length)].transform));
+            
         }
 
         public void BuyWeapon(WeaponType w)
         {
             inventory.ChoiseWeapon(w);
-        }    
-    
-        private IEnumerator Respawn(Transform Spawn)
-        {
-            UIManager.Instance.DiePanel();
-            anim.cmdDieAnim();
-            _dieEffect.SetActive(true);
-            foreach (var m in _playerSkinDetails) m.SetActive(false);
-            yield return new WaitForSeconds(3);
-            _dieEffect.SetActive(false);
-            foreach (var m in _playerSkinDetails) m.SetActive(true);
-            transform.position = Spawn.position;
-            anim.cmdSpawn();
         }
     }
 }

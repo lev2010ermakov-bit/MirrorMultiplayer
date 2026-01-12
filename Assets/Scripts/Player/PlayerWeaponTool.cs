@@ -15,7 +15,6 @@ namespace PlayerScripts
             cam = Camera.main.transform;
             player = GetComponent<Player>();
         } 
-
         public void Shoot(WeaponType weapon)
         {
             if (weapon == WeaponType.EMPTY) return;
@@ -34,7 +33,10 @@ namespace PlayerScripts
             }
 
             if (hit.transform != null)
+            {
                 hitedPlayer = hit.transform.gameObject.GetComponent<Player>();
+                Debug.Log(player.PlayerName + " hits " + hitedPlayer.PlayerName);
+            }
 
             foreach (var w in ConfigContainer.Weapon.WeaponSetts)
             {
@@ -42,11 +44,15 @@ namespace PlayerScripts
                 {
                     aud.PlayOneShot(w.ShootSound);
                     player.inventory.cmdPlayGunAnimations(WeaponAnimationType.Shoot);
-                    if (hitedPlayer)
-                        hitedPlayer.cmdDamage(w.DamagePerBullet);
+                    if (hitedPlayer) HitPlayer(hitedPlayer, w.DamagePerBullet);
                 }
             }
         }
+
+        private void HitPlayer(Player player,int damage)
+        {
+            player.cmdDamage(damage);
+        } 
     }
 
     [Serializable]

@@ -8867,14 +8867,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dontDestroyOnLoad: 1
   runInBackground: 1
-  headlessStartMode: 0
+  headlessStartMode: 1
   editorAutoStart: 0
   sendRate: 60
   offlineScene: 
   onlineScene: Assets/Scenes/BatleArena.unity
   offlineSceneLoadDelay: 0
   transport: {fileID: 1881719902}
-  networkAddress: lemon-games.ru
+  networkAddress: localhost
   maxConnections: 100
   disconnectInactiveConnections: 0
   disconnectInactiveTimeout: 60

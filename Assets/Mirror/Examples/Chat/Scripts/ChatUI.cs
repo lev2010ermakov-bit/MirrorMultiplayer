@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.IO;
 using kcp2k;
+using System;
 
 namespace Mirror.Examples.Chat
 {
@@ -39,7 +40,15 @@ namespace Mirror.Examples.Chat
         void CmdSend(string message, string senderName)
         {
             if (!string.IsNullOrWhiteSpace(message))
+            {
                 RpcReceive(senderName, message.Trim());
+
+                if (isServer)
+                {
+                    string LogMessage = senderName + ": " + message;
+                    AppendMessageToLog(LogMessage);
+                }
+            }
         }
 
         [ClientRpc]
@@ -48,9 +57,7 @@ namespace Mirror.Examples.Chat
             string prettyMessage = senderName == localPlayerName ?
                 $"<color=#CF27F5>{"You"}:</color> {message}" :
                 $"<color=#27F56C>{senderName}:</color> {message}";
-            string LogMessage = senderName + ": " + message;
             AppendMessage(prettyMessage);
-            AppendMessageToLog(LogMessage);
         }
 
         void AppendMessage(string message)
@@ -64,7 +71,7 @@ namespace Mirror.Examples.Chat
             try
             {
                 // Append the content to the file. Use Environment.NewLine for a new line.
-                File.AppendAllText("/home/lev/Documents/MultiplayerStatistic/Chat.txt", Log + "\n");
+                File.AppendAllText($"/home/{Environment.UserName}/Documents/Chat.txt", Log + "\n");
                 Debug.Log("Message added to chat history file");
             }
             catch (System.Exception e)
